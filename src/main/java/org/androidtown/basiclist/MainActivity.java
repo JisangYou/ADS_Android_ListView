@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    //1. 데이터를 정의
+    //1. 데이터 및 리스트 뷰 정의
     ArrayList<String> data = new ArrayList<>();
     ListView listView;
 
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //1. 데이터를 정의(100개의 가상 값을 담는다.)
+        //2. 데이터를 세팅(100개의 가상 값을 담는다.)
         for (int i = 0; i < 100; i++) {
             data.add("임시값" + i);
         }
@@ -37,11 +37,10 @@ public class MainActivity extends AppCompatActivity {
 
         //2. 데이터와 리스트뷰를 연결하는 아답터를 생성
         CustomAdapter adapter = new CustomAdapter(this, data); // data가 인수로 들어오면! 어댑터에서 data를 처리하는 함수 과정이 생김.
-        //3. 아답터와 리스트뷰를 연결
 
+        //3. 아답터와 리스트뷰를 연결
         listView = (ListView) findViewById(R.id.listView);
-        listView.setAdapter(adapter); // setAdapter를 해준 순간 CustomeAdapter의 기능이 이곳에서 펼쳐진다는 것을 의미하면
-        // 그런 후에는??
+        listView.setAdapter(adapter);
 
     }
 }
@@ -62,9 +61,7 @@ class CustomAdapter extends BaseAdapter {
     @Override
     public int getCount() {
         return data.size();
-    } // 오버라이드된 함수이다. 그리고 data.size()를 리턴해준다. 그러나 언제? 어디서? 어떻게 사용되는지?
-    // 예를 들어 getView같은 경우는 눈에 보이는 것이 있기 때문에, CustomAdapter클래스가 MainAcitivity에서 set될때
-    //해당 시스템자원과 데이터를 받는 것을 알 수 있다. 그러나 getItem,getItemID, getCount는 ??? 크릭
+    }
 
 
     //현재 뿌려질 데이터를 리턴해준다.
@@ -90,16 +87,16 @@ class CustomAdapter extends BaseAdapter {
 
         if (view == null) { // 아이템 view를 재사용하기 위해서 null 체크를 한다.
             view = LayoutInflater
-                    .from(context) // View convertView, ViewGroup viewGroup 중 하나가 null이 발생할 우려가 있음.
+                    .from(context)                            // View convertView, ViewGroup viewGroup 중 하나가 null이 발생할 우려가 있음.
                     .inflate(R.layout.list_item, null); // 아이템을 null이라고 지정해주면 가장 쉽게 그 상태로 저장시킴
-            //아이템이 최초 호출될 경우는 Holder에 위젯들을 담고,
-            holder = new Holder(view); //생성자로 만들어서 뷰를 넣어준다.
+                                                             //아이템이 최초 호출될 경우는 Holder에 위젯들을 담고,
+            holder = new Holder(view);
 
             //홀더를 View에 붙여놓는다.
             view.setTag(holder); // 원래 라벨링을 하기위해서 만들었는데, 그냥 여기다가 홀더 객체를 던짐.
 
         } else {
-            // View에 붙어 이는 홀더를 가져온다.
+            // View에 붙어 있는 홀더를 가져온다.
             holder = (Holder) view.getTag(); //tag는 원래 이 용도가 아니였음.
         }
 
@@ -114,8 +111,8 @@ class CustomAdapter extends BaseAdapter {
         TextView textView;
 
         public Holder(View view) {
-           textView = (TextView) view.findViewById(R.id.textView);
-           init();
+            textView = (TextView) view.findViewById(R.id.textView);
+            init();
         }
 
         public void init() {
@@ -126,7 +123,7 @@ class CustomAdapter extends BaseAdapter {
                 public void onClick(View v) {
                     Intent intent = new Intent(textView.getContext(), DetailActivity.class); //모든 뷰는 컨텍스트(시스템 자원을 공유할 수 있다.
                     intent.putExtra("valueKey", textView.getText());//edit텍스트는 꼭 toString해준다.text뷰는 생략이 가능?// 키 값 항상 체크 잘 해주기!!!!!/// 키, 밸류 형태로 보내짐
-                    textView.getContext().startActivity(intent);//
+                    textView.getContext().startActivity(intent);
                 }
             });
         }
